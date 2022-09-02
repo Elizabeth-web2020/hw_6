@@ -141,8 +141,33 @@ class Car {
   }
 
   drive(speed, hoursNumber) {
-    if (!speed || typeof speed !== 'number' || speed <= 0 || ) {
+    const distance = speed * hoursNumber;
+    const fuelCostPerTrip = (distance * this.#fuelConsumption) / 100;
+    console.log(fuelCostPerTrip)
 
+    if (!speed || typeof speed !== 'number' && speed <= 0 || speed === Infinity || speed === -Infinity || isNaN(speed)) {
+      throw new Error('Wrong speed');
     };
+
+    if (!hoursNumber || typeof hoursNumber !== 'number' && hoursNumber <= 0 || hoursNumber === Infinity || hoursNumber === -Infinity || isNaN(hoursNumber)) {
+      throw new Error('Wrong number of hours');
+    };
+
+    if (speed > this.#maxSpeed) {
+      throw new Error('The car can\'t go so fast!');
+    };
+
+    if (!this.#isStarted) {
+      throw new Error('The car ignition must be on to drive!');
+    };
+
+    if (this.#currentFuelVolume < fuelCostPerTrip) {
+      throw new Error('Not enough fuel!');
+    };
+
+    this.#currentFuelVolume = this.#currentFuelVolume - fuelCostPerTrip;
+    this.#mileage = this.#mileage + distance;
   }
 }
+
+
