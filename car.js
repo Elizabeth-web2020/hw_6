@@ -2,14 +2,20 @@ class Car {
     #currentFuelVolume = 0;
     #isStarted = false;
     #mileage = 0;
+    #brand;
+    #model;
+    #yearOfManufacturing;
+    #maxSpeed;
+    #maxFuelVolume;
+    #fuelConsumption;
 
-  constructor(brand, model, yearOfManufacturing, maxSpeed, maxFuelVolume, fuelConsumption) {
-    this.setBrand(brand);
-    this.setModel(model);
-    this.setYearOfManufacturing(yearOfManufacturing);
-    this.setMaxSpeed(maxSpeed);
-    this.setmaxFuelVolume(maxFuelVolume);
-    this.setFuelConsumption(fuelConsumption);
+  constructor(options) {
+    this.setBrand(options.brand);
+    this.setModel(options.model);
+    this.setYearOfManufacturing(options.yearOfManufacturing);
+    this.setMaxSpeed(options.maxSpeed);
+    this.setMaxFuelVolume(options.maxFuelVolume);
+    this.setFuelConsumption(options.fuelConsumption);
   }
 
   getBrand() {
@@ -89,7 +95,7 @@ class Car {
   }
 
   setFuelConsumption(newFuelConsumption) {
-    if (!newMaxFuelVolume || typeof newMaxFuelVolume !== 'number' || newMaxFuelVolume === Infinity || newMaxFuelVolume === -Infinity || isNaN(newMaxFuelVolume)) {
+    if (!newFuelConsumption || typeof newFuelConsumption !== 'number' || newFuelConsumption === Infinity || newFuelConsumption === -Infinity || isNaN(newFuelConsumption)) {
       throw new Error('Enter a valid number of Fuel Consumption!');
     };
 
@@ -142,12 +148,16 @@ class Car {
 
   drive(speed, hoursNumber) {
     const distance = speed * hoursNumber;
-    const fuelCostPerTrip = (distance * this.#fuelConsumption) / 100;
+    const fuelCostPerTrip = Math.round((distance * this.#fuelConsumption) / 100);
     console.log(fuelCostPerTrip)
 
     if (!speed || typeof speed !== 'number' && speed <= 0 || speed === Infinity || speed === -Infinity || isNaN(speed)) {
       throw new Error('Wrong speed');
     };
+
+    if (speed > this.#maxSpeed) {
+      throw new Error(`Speed limit of car is ${this.#maxSpeed} km per hour!`);
+    }
 
     if (!hoursNumber || typeof hoursNumber !== 'number' && hoursNumber <= 0 || hoursNumber === Infinity || hoursNumber === -Infinity || isNaN(hoursNumber)) {
       throw new Error('Wrong number of hours');
@@ -170,4 +180,13 @@ class Car {
   }
 }
 
+const subaru = new Car({
+brand: 'Subaru', 
+model: 'Impressa', 
+yearOfManufacturing: 2008, 
+maxSpeed: 170, 
+maxFuelVolume: 20, 
+fuelConsumption: 6
+});
 
+module.exports = { Car };
